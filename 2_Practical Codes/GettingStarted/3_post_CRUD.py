@@ -2,22 +2,22 @@ from fastapi import FastAPI, Response, status,HTTPException
 from pydantic import BaseModel, Field
 from typing import Optional
 import random # Import the module, not just randint
+from psycopg2.extras import RealDictCursor # Import RealDictCursor for better dictionary handling
 
 app = FastAPI()
+
 
 POSTS = [
     {
         'title': 'My First Post',
         'content': 'This is the content of my first post.',
         'published': True,
-        'rating': 5,
         'id': 1
     },
     {
         'title': 'My Second Post',
         'content': 'This is the content of my second post.',
         'published': False,
-        'rating': 4,
         'id': 2
     }
 ]
@@ -30,7 +30,6 @@ class Post(BaseModel):
    title: str = Field(..., example="My First Post")
    content: str = Field(..., example="This is the content of my first post.")
    published: bool = Field(default=True, example=True)
-   rating: Optional[int] = Field(default=None, gt=0, lt=6, example=5)
    
    # Use default_factory to run the function dynamically on every new request
    id: int = Field(default_factory=generate_id, example=1) 
