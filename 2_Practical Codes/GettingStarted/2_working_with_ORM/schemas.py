@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 
 # REQUEST SCHEMAS
@@ -30,7 +30,20 @@ class PostResponse(BaseModel):
     content: str
     published: bool
     created_at: datetime
-    
+
+    model_config = {
+        "from_attributes": True
+    }
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str   
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+
     model_config = {
         "from_attributes": True
     }
