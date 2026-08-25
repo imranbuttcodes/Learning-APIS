@@ -7,9 +7,12 @@ from sqlalchemy.orm import Session
 
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/users",
+    tags=["Users"]
+)
 
-@router.post("/create_user", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     hashed_pwd = hash_password(user.password)
     user.password = hashed_pwd
@@ -21,13 +24,13 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
     return new_user
 
-@router.get("/users", response_model=list[UserResponse])
+@router.get("/", response_model=list[UserResponse])
 def get_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
 
     return users
 
-@router.get("/users/{id}", response_model=UserResponse)
+@router.get("/{id}", response_model=UserResponse)
 def get_user(id: int, db: Session = Depends(get_db)):
     user_query = db.query(User).filter(User.id == id)
     user = user_query.first()
@@ -40,7 +43,7 @@ def get_user(id: int, db: Session = Depends(get_db)):
     return user
     
 
-@router.put('/update_user/{id}', response_model=UserResponse)
+@router.put('/{id}', response_model=UserResponse)
 def update_user(id: int, updated_user: UserCreate, db: Session = Depends(get_db)):
     user_query = db.query(User).filter(User.id == id)
     user = user_query.first()
@@ -57,7 +60,7 @@ def update_user(id: int, updated_user: UserCreate, db: Session = Depends(get_db)
 
     return user
 
-@router.delete('/delete_user/{id}')
+@router.delete('/{id}')
 def delete_user(id: int, db: Session = Depends(get_db)):
     user_query = db.query(User).filter(User.id == id)
     user = user_query.first()
