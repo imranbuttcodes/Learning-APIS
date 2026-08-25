@@ -27,48 +27,4 @@ class Base(DeclarativeBase):
     pass
 
 
-class Post(Base):
-    __tablename__ = "posts"
-
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-        index=True
-    )
-
-    title: Mapped[str] = mapped_column(
-        nullable=False
-    )
-
-    content: Mapped[str] = mapped_column(
-        nullable=False
-    )
-
-    published: Mapped[bool] = mapped_column(
-        default=True
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        nullable=False,
-        server_default=text("now()")
-    )
-
-
-Base.metadata.create_all(engine)
-print("Tables created successfully.")
-
-
-
 SessionLocal = sessionmaker(bind=engine)
-
-session = SessionLocal()
-
-post = Post(
-    title="My Testing Post WIth ORM",
-    content="This is the content of my first post.",
-    published=True
-)
-
-session.add(post)
-session.commit()
-session.close()
-print("Post created successfully.")
