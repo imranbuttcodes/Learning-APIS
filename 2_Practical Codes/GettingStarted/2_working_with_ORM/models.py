@@ -20,11 +20,11 @@ class Post(Base):
     )
 
     published: Mapped[bool] = mapped_column(
-        default=True
+        server_default='True',
+        nullable=False
     )
 
     created_at: Mapped[datetime] = mapped_column(
         nullable=False,
         server_default=text("now()")
     )
-

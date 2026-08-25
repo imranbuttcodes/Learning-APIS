@@ -28,3 +28,12 @@ class Base(DeclarativeBase):
 
 
 SessionLocal = sessionmaker(bind=engine)
+
+
+# Dependency to get the DB session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
