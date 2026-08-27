@@ -52,6 +52,10 @@ def update_user(id: int, updated_user: UserCreate, db: Session = Depends(get_db)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found!"
         )
+
+    hashed_pwd = hash_password(updated_user.password)
+    updated_user.password = hashed_pwd
+    
     user_query.update(updated_user.model_dump(), synchronize_session=False)
 
     db.commit()

@@ -1,8 +1,9 @@
-from ..models import Post
-from ..schemas import PostCreate, PostResponse
+from ..models import Post, User
+from ..schemas import PostCreate, PostResponse, TokenData
 from ..databases import get_db, engine
 from fastapi import status, Depends, HTTPException, Response, APIRouter
 from sqlalchemy.orm import Session 
+from ..oauth2 import get_current_user
 
 
 
@@ -18,8 +19,10 @@ def test_sqlalchemy(db: Session = Depends(get_db)):
 
 # 1. CREATE A POST
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
-def create_post(post: PostCreate, db: Session = Depends(get_db)):
+def create_post(post: PostCreate, db: Session = Depends(get_db),current_user : User = Depends(get_current_user)):
     # Unpack the Pydantic model directly into the SQLAlchemy model
+    print(f"The user creating this post has an ID of: {current_user.email}")
+    
     new_post = Post(**post.model_dump())
     
     db.add(new_post) # Add to the session
@@ -38,7 +41,7 @@ def get_all_posts(db: Session = Depends(get_db)):
 
 # 3. GET A SPECIFIC POST
 @router.get("/{id}", response_model=PostResponse)
-def get_post(id: int, db: Session = Depends(get_db)):
+def get_post(id: int, db: Session = Depends(get_db), current_user : User = Depends(get_current_user)):
     # Equivalent to "SELECT * FROM posts WHERE id = {id}" 
     post = db.query(Post).filter(Post.id == id).first()
     
@@ -48,7 +51,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
 
 # 4. UPDATE A POST
 @router.put("/{id}", response_model=PostResponse)
-def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db), current_user : User = Depends(get_current_user)):
     post_query = db.query(Post).filter(Post.id == id)
     post = post_query.first()
     
@@ -63,13 +66,14 @@ def update_post(id: int, updated_post: PostCreate, db: Session = Depends(get_db)
 
 # 5. DELETE A POST
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db)):
+def delete_post(id: int, db: Session = Depends(get_db), current_user : User = Depends(get_current_user)):
     post_query = db.query(Post).filter(Post.id == id)
     post = post_query.first()
     
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id {id} not found")
-    
+
+    print(f"the user: {current_user.email} is trying to delete the post {id}")
     post_query.delete(synchronize_session=False)
     db.commit()
     
