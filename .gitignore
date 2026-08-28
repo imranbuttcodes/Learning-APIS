@@ -1,3 +1,5 @@
 /.venv
 
 .env
+.vscode
+./2_Practical Codes/GettingStarted/2_working_with_ORM/.env

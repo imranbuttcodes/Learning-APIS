@@ -7,7 +7,7 @@ from .utils import hash_password
 from .databases import Base, engine, get_db
 from .models import Post, User
 from .schemas import PostCreate, PostResponse, UserCreate, UserResponse
-from .routers import user, post, auth
+from .routers import user, post, auth, vote
 
 load_dotenv()
 
@@ -15,13 +15,11 @@ app = FastAPI()
 
 Base.metadata.create_all(bind=engine)
 
-# --- ROUTES ---
-
-
 
 app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(vote.router)
 
 @app.get("/")
 def root():

@@ -12,12 +12,12 @@ from .models import User
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl='login')
 
-load_dotenv()
+from .config import settings
 
-SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+SECRET_KEY = settings.jwt_secret_key
 
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ALGORITHM = settings.algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 
 def create_access_token(data: dict):
     to_encode = data.copy()

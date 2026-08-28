@@ -22,6 +22,15 @@ class PostCreate(BaseModel):
     )
 
 
+class UserOut(BaseModel):
+    id: int
+    email: str
+    class Config:
+        from_attributes = True
+
+
+
+
 # RESPONSE SCHEMAS
 
 class PostResponse(BaseModel):
@@ -30,6 +39,8 @@ class PostResponse(BaseModel):
     content: str
     published: bool
     created_at: datetime
+    owner_id: int
+    owner: UserOut
 
     model_config = {
         "from_attributes": True
@@ -59,3 +70,9 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+
+
+class Vote(BaseModel):
+    post_id: int
+    # Enforce that 'dir' must be exactly 0 or 1
+    dir: int = Field(ge=0, le=1)
