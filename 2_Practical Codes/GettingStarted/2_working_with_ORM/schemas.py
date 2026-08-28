@@ -25,8 +25,10 @@ class PostCreate(BaseModel):
 class UserOut(BaseModel):
     id: int
     email: str
-    class Config:
-        from_attributes = True
+
+    model_config = {
+        "from_attributes": True
+    }
 
 
 
@@ -76,3 +78,12 @@ class Vote(BaseModel):
     post_id: int
     # Enforce that 'dir' must be exactly 0 or 1
     dir: int = Field(ge=0, le=1)
+
+class PostOut(BaseModel):
+# 'Post' must exactly match the model name queried in SQLAlchemy
+    Post: PostResponse
+    votes: int
+
+    model_config = {
+        "from_attributes": True
+    }

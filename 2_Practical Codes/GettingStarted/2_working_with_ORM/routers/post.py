@@ -1,11 +1,11 @@
-from ..models import Post, User
-from ..schemas import PostCreate, PostResponse, TokenData
+from ..models import Post, User, Vote
+from ..schemas import PostCreate, PostResponse, TokenData, PostOut
 from ..databases import get_db, engine
 from fastapi import status, Depends, HTTPException, Response, APIRouter
 from sqlalchemy.orm import Session 
 from ..oauth2 import get_current_user
 from typing import Optional
-
+from sqlalchemy import func
 
 router = APIRouter(
     prefix="/posts",
@@ -38,14 +38,25 @@ def create_post(post: PostCreate, db: Session = Depends(get_db),current_user : U
 #     return posts
 
 # 2. GET ALL POSTS
-@router.get("/", response_model=list[PostResponse])
+@router.get("/", response_model=list[PostOut])
 def get_all_posts(db: Session = Depends(get_db), current_user : User = Depends(get_current_user),  limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    # Equivalent to "SELECT * FROM posts"
-    posts = db.query(Post) # it actually returns a Query object (the raw SQL query), not the results yet
-    print(posts)
-    # The '%' symbols act as SQL wildcards for "anything before" and "anything after"
-    posts = posts.filter(Post.title.ilike(f"%{search}%")).limit(limit).offset(skip).all()  # Fetches results
-    return posts
+    # # Equivalent to "SELECT * FROM posts"
+    # posts = db.query(Post) # it actually returns a Query object (the raw SQL query), not the results yet
+    # print(posts)
+    # # The '%' symbols act as SQL wildcards for "anything before" and "anything after"
+    # posts = posts.filter(Post.title.ilike(f"%{search}%")).limit(limit).offset(skip).all()  # Fetches results
+    # return posts
+
+    results = db.query(
+        Post, 
+        func.count(Vote.post_id).label("votes")
+    ).join(
+        Vote, Vote.post_id == Post.id, isouter=True
+    ).group_by(
+        Post.id
+    ).all()
+    
+    return results
 
 # 3. GET A SPECIFIC POST
 @router.get("/{id}", response_model=PostResponse,)
