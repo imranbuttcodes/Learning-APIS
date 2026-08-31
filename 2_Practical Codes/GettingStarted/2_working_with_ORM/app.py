@@ -3,11 +3,11 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from sqlalchemy.orm import Session 
 from dotenv import load_dotenv
-from .utils import hash_password
-from .databases import Base, engine, get_db
-from .models import Post, User
-from .schemas import PostCreate, PostResponse, UserCreate, UserResponse
-from .routers import user, post, auth, vote
+from utils import hash_password
+from databases import Base, engine, get_db
+from models import Post, User
+from schemas import PostCreate, PostResponse, UserCreate, UserResponse
+from routers import user, post, auth, vote
 from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 

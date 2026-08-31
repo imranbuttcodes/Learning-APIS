@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import text, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, Relationship
-from .databases import Base
+from databases import Base
 
 class Post(Base):
     __tablename__ = "posts"
@@ -60,9 +60,9 @@ class User(Base):
         server_default=text("now()")
     )
 
-    phone_number: Mapped[str] = mapped_column(
-        nullable=True
-    )
+    # phone_number: Mapped[str] = mapped_column(
+    #     nullable=True
+    # )
 
 class Vote(Base):
     __tablename__ = "votes"

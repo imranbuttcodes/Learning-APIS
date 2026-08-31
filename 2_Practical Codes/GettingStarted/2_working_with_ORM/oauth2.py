@@ -2,17 +2,17 @@ import jwt
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 import os
-from .schemas import TokenData
+from schemas import TokenData
 from jwt.exceptions import PyJWTError, InvalidTokenError
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer   
-from .databases import get_db
+from databases import get_db
 from sqlalchemy.orm import Session
-from .models import User
+from models import User
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl='login')
 
-from .config import settings
+from config import settings
 
 SECRET_KEY = settings.jwt_secret_key
 

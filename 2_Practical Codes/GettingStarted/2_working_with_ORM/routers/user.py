@@ -1,7 +1,7 @@
-from ..models import User
-from ..schemas import UserResponse, UserCreate
-from ..utils import hash_password
-from ..databases import get_db
+from models import User
+from schemas import UserResponse, UserCreate
+from utils import hash_password
+from databases import get_db
 from fastapi import status, Depends, HTTPException, Response, APIRouter
 from sqlalchemy.orm import Session 
 

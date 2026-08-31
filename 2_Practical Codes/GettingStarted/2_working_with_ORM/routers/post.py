@@ -1,9 +1,9 @@
-from ..models import Post, User, Vote
-from ..schemas import PostCreate, PostResponse, TokenData, PostOut
-from ..databases import get_db, engine
+from models import Post, User, Vote
+from schemas import PostCreate, PostResponse, TokenData, PostOut
+from databases import get_db, engine
 from fastapi import status, Depends, HTTPException, Response, APIRouter
 from sqlalchemy.orm import Session 
-from ..oauth2 import get_current_user
+from oauth2 import get_current_user
 from typing import Optional
 from sqlalchemy import func
 

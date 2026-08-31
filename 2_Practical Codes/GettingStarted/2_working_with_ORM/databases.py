@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, sessionmaker
-from .config import settings  # Import the instance we created above
+from config import settings  # Import the instance we created above
 
 SQLALCHEMY_DATABASE_URL = (
     f"postgresql+psycopg2://"
