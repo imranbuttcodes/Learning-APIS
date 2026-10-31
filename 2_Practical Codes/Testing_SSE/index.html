@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Demo</title>
+</head>
+<body>
+
+    <h2>Server Updates</h2>
+    <div id="messages"></div>
+
+    <script>
+        const source = new EventSource(
+            "http://localhost:8000/stream"
+        );
+
+        source.onmessage = (event) => {
+
+            const div = document.createElement("div");
+
+            div.textContent = event.data + 'bro';
+
+            document.getElementById("messages")
+                .appendChild(div);
+        };
+
+        source.onerror = () => {
+            console.log("SSE connection error");
+        };
+    </script>
+
+</body>
+</html>
